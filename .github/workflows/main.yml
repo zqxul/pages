@@ -52,7 +52,9 @@ jobs:
         run: touch public/abc.txt
 
       - name: build file2
-        run: touch public/abc/def.txt
+        run: 
+          mkdir public/abc
+          touch public/abc/def.txt
 
       - name: deploy
         if: success()
