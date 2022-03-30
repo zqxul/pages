@@ -53,7 +53,7 @@ jobs:
 
       - name: build file2
         run: 
-          mkdir public/abc
+          mkdir public/abcdd
           touch public/abcdd/def.txt
 
       - name: deploy
