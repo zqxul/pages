@@ -34,10 +34,10 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          ls -a
-          ls ./public -a
           
       - name: Gen dummy page
         run:
           mkdir public
           touch public/test.txt
+          ls -a
+          ls ./public -a
