@@ -42,5 +42,8 @@ jobs:
         run:
           mkdir public
      
-      - name: run go
+      - name: show go version
         run: go version
+
+      - name: run go programe
+        run: go run main.go
