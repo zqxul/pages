@@ -54,7 +54,7 @@ jobs:
       - name: build file2
         run: 
           mkdir public/abc
-          touch public/abc/def.txt
+          touch public/abcdd/def.txt
 
       - name: deploy
         if: success()
