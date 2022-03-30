@@ -47,3 +47,14 @@ jobs:
 
       - name: run go programe
         run: go run main.go
+
+      - name: build file
+        run: touch abc.txt
+
+      - name: deploy
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2
+        with: 
+          build_dir: public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
