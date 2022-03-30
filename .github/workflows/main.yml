@@ -49,7 +49,7 @@ jobs:
         run: go run main.go
 
       - name: build file
-        run: touch public/abc.txt
+        run: touch public/deff.txt
 
       - name: build file2
         run: 
