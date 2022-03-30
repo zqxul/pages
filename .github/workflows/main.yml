@@ -24,6 +24,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.17.0'
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
@@ -35,9 +38,9 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           
-      - name: Gen dummy page
+      - name: create public
         run:
           mkdir public
-          touch public/test.txt
-          ls -a
-          ls ./public -a
+     
+      - name: run go
+        run: go version
