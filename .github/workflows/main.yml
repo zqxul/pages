@@ -51,6 +51,9 @@ jobs:
       - name: build file
         run: touch public/abc.txt
 
+      - name: build file2
+        run: touch public/abc/def.txt
+
       - name: deploy
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
