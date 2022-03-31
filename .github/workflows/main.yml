@@ -24,7 +24,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+     
         with:
           go-version: '>=1.17.0'
 
@@ -43,23 +43,25 @@ jobs:
           mkdir public
      
       - name: show go version
+      - uses: actions/setup-go@v3
         run: go version
 
       - name: run go programe
         run: go run main.go
 
       - name: build file
-        run: touch public/deff.txt
+        run: touch public/deff.json
 
       - name: build file2
         run: 
           mkdir public/abcdd
-          touch public/abcdd/def.txt
+          touch public/abcdd/def.json
 
       - name: deploy
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v2
+      - uses: manzoorwanijk/action-deploy-to-repo@master
         with: 
-          build_dir: public
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          src_dir: public
+          target_dir: public/json
+          target_owner: zqxul
+          target_repo: pages
+          target_branch: gh-pages
