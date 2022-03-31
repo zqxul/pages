@@ -22,6 +22,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -52,22 +53,12 @@ jobs:
         run: touch public/g.json
 
       - name: build file
-        run: echo "g.json" >> public/g.json
+        run: echo "h.json" >> public/h.json
       
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: public
           destination_dir: public/json
           keep_files: true
-
-      # - name: deploy
-      #   uses: manzoorwanijk/action-deploy-to-repo@master
-      #   with:
-      #     access_token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-      #     src_dir: public/abcdd
-      #     target_owner: zqxul
-      #     target_repo: pages
-      #     target_branch: gh-pages
-      #     target_dir: docs
