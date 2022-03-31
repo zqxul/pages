@@ -50,6 +50,9 @@ jobs:
 
       - name: build file
         run: touch public/g.json
+
+      - name: build file
+        run: echo "g.json" >> public/g.json
       
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
