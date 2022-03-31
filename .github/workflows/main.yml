@@ -62,7 +62,7 @@ jobs:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           SRC_FOLDER: public
           DEST_OWNER: zqxul
-          DEST_REPO: zqxul.github.io/pages
+          DEST_REPO: pages
           DEST_BRANCH: gh_pages
           DEST_FOLDER: docs
           DEST_PREDEPLOY_CLEANUP: "rm bundle* && rm index.html"
