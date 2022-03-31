@@ -55,13 +55,19 @@ jobs:
         run: 
           mkdir public/abcdd
           touch public/abcdd/def.json
-
+      
       - name: deploy
-        uses: manzoorwanijk/action-deploy-to-repo@master
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          access_token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          src_dir: public/abcdd
-          target_owner: zqxul
-          target_repo: pages
-          target_branch: gh-pages
-          target_dir: docs
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+
+      # - name: deploy
+      #   uses: manzoorwanijk/action-deploy-to-repo@master
+      #   with:
+      #     access_token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+      #     src_dir: public/abcdd
+      #     target_owner: zqxul
+      #     target_repo: pages
+      #     target_branch: gh-pages
+      #     target_dir: docs
