@@ -57,11 +57,11 @@ jobs:
           touch public/abcdd/def.json
 
       - name: deploy
-        uses: hpcodecraft/action-deploy-workspace-to-repo@v2.2
-        env:
-          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          SRC_FOLDER: public/abcdd
-          DEST_OWNER: zqxul
-          DEST_REPO: pages
-          DEST_BRANCH: gh-pages
-          DEST_FOLDER: docs
+        uses: manzoorwanijk/action-deploy-to-repo@master
+        with:
+          access_token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          src_dir: public/abcdd
+          target_owner: zqxul
+          target_repo: pages
+          target_branch: gh-pages
+          target_dir: docs
