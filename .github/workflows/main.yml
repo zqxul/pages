@@ -49,7 +49,7 @@ jobs:
         run: go run main.go
 
       - name: build file
-        run: touch public/def.json
+        run: touch public/g.json
       
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
@@ -57,6 +57,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           destination_dir: public/json
+          keep_files: true
 
       # - name: deploy
       #   uses: manzoorwanijk/action-deploy-to-repo@master
