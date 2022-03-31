@@ -60,7 +60,7 @@ jobs:
         uses: hpcodecraft/action-deploy-workspace-to-repo@v2.2
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          SRC_FOLDER: public
+          SRC_FOLDER: public/abcdd
           DEST_OWNER: zqxul
           DEST_REPO: pages
           DEST_BRANCH: gh-pages
