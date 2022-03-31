@@ -62,3 +62,18 @@ jobs:
           publish_dir: public
           destination_dir: public/json
           keep_files: true
+
+
+      # - name: Setup Go Env
+      #   uses: actions/setup-go@v3
+      #   with:
+      #     go-version: '>=1.17.0'
+      # - name: Print Go Version
+      #   run: go version
+      # - name: Transform
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: collector/numbers
+      #     destination_dir: front/public/json
+      #     keep_files: false
