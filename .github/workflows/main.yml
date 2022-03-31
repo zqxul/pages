@@ -57,7 +57,7 @@ jobs:
           touch public/abcdd/def.txt
 
       - name: deploy
-      - uses: manzoorwanijk/action-deploy-to-repo@master
+        uses: manzoorwanijk/action-deploy-to-repo@master
         with: 
           src_dir: public
           target_dir: public/json
