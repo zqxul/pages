@@ -50,10 +50,6 @@ jobs:
 
       - name: build file
         run: touch public/abc.json
-
-      - name: build file2
-        run: 
-          touch public/abcdd/def.json
       
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
