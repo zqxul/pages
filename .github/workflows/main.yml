@@ -49,12 +49,12 @@ jobs:
         run: go run main.go
 
       - name: build file
-        run: touch public/deff.txt
+        run: touch public/deff.json
 
       - name: build file2
         run: 
           mkdir public/abcdd
-          touch public/abcdd/def.txt
+          touch public/abcdd/def.json
 
       - name: deploy
         uses: hpcodecraft/action-deploy-workspace-to-repo@v2.2
@@ -63,6 +63,5 @@ jobs:
           SRC_FOLDER: public
           DEST_OWNER: zqxul
           DEST_REPO: pages
-          DEST_BRANCH: gh_pages
+          DEST_BRANCH: gh-pages
           DEST_FOLDER: docs
-          DEST_PREDEPLOY_CLEANUP: "rm bundle* && rm index.html"
