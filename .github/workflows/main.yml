@@ -49,18 +49,18 @@ jobs:
         run: go run main.go
 
       - name: build file
-        run: touch public/deff.json
+        run: touch public/abc.json
 
       - name: build file2
         run: 
-          mkdir public/abcdd
           touch public/abcdd/def.json
       
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public/abcdd
+          publish_dir: ./public
+          destination_dir: json
 
       # - name: deploy
       #   uses: manzoorwanijk/action-deploy-to-repo@master
