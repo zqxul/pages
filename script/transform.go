@@ -90,8 +90,11 @@ func main() {
 		return
 	}
 	HandleSourceDir()
-	results := PrepareResults()
-	WriteResults(results)
+	for k, v := range typeMap {
+		results := PrepareResults(v)
+		WriteResults(results, k)
+	}
+
 }
 
 func PrepareDestDir() bool {
@@ -107,8 +110,10 @@ func PrepareDestDir() bool {
 		fmt.Printf("Detination dir Ready")
 		return true
 	}
-	return false
+	return true
 }
+
+var typeMap = make(map[string]*sync.Map)
 
 func HandleSourceDir() {
 	fmt.Println("Start reading source dir")
@@ -121,16 +126,22 @@ func HandleSourceDir() {
 		if !v.IsDir() {
 			continue
 		}
-		HandleTypeDir(v.Name())
+		typeMap[v.Name()] = &sync.Map{}
+	}
+	for k, _ := range typeMap {
+		HandleTypeDir(k)
 	}
 }
 
 func HandleTypeDir(typeDir string) {
-	fmt.Printf("Start reading type dir: %s", typeDir)
+	fmt.Printf("Start reading type dir: %s\n", typeDir)
 	typePath := srcDir + "/" + typeDir
 	dirs, err := os.ReadDir(typePath)
 	if err != nil {
 		fmt.Printf("Failed to read type dir, err: %v\n", err)
+		return
+	}
+	if ok := PrepareTypeDir(typeDir); !ok {
 		return
 	}
 	for _, item := range dirs {
@@ -152,7 +163,6 @@ func HandleTypeDir(typeDir string) {
 			fmt.Printf("Unmarshal data err: %v\n", err)
 			continue
 		}
-		PrepareTypeDir(typeDir)
 		HandleData(&data, filename, typeDir)
 	}
 }
@@ -171,21 +181,20 @@ func PrepareTypeDir(typeDir string) bool {
 		fmt.Printf("Type dir Ready")
 		return true
 	}
-	return false
+	return true
 }
 
 func HandleData(data *Data, filename string, t string) {
 	for i, schema := range data.Schemas {
-		r := GetResult(schema.Name, i)
+		resultMap := typeMap[t]
+		r := GetResult(resultMap, schema.Name, i)
 		r.Sql = schema.Sql
 		r.Type = t
 		SetLine(r, &schema, &data.Meta, filename)
 	}
 }
 
-var resultMap = sync.Map{}
-
-func GetResult(k string, index int) *Result {
+func GetResult(resultMap *sync.Map, k string, index int) *Result {
 	var v interface{}
 	var ok bool
 	if v, ok = resultMap.Load(k); !ok {
@@ -209,7 +218,7 @@ func SetLine(r *Result, schema *Schema, meta *Meta, filename string) {
 	}
 }
 
-func PrepareResults() []*Result {
+func PrepareResults(resultMap *sync.Map) []*Result {
 	results := make([]*Result, 0)
 	resultMap.Range(func(key, value any) bool {
 		if v, ok := resultMap.Load(key); ok {
@@ -222,7 +231,7 @@ func PrepareResults() []*Result {
 	return results
 }
 
-func WriteResults(results []*Result) {
+func WriteResults(results []*Result, t string) {
 	indexMap := make(map[int]string, 0)
 	var wg sync.WaitGroup
 	wg.Add(len(results))
@@ -231,7 +240,7 @@ func WriteResults(results []*Result) {
 		indexMap[result.Index] = result.Title + ".json"
 		go WriteResult(result, &wg)
 	}
-	WriteIndexFile(indexMap, results[0].Type)
+	WriteIndexFile(indexMap, t)
 	wg.Wait()
 }
 
