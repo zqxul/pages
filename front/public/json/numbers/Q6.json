@@ -1,0 +1,1 @@
+{"title":"Q6","sql":"SELECT sum(number+number+number) FROM numbers_mt(10000000000);","lines":[{"line":"min","Samples":["('2022-03-28-numbers.json',5.145000,'v0.7.0-nightly')","('2022-03-29-numbers.json',5.170000,'v0.7.1-nightly')"]},{"line":"max","Samples":["('2022-03-28-numbers.json',5.345000,'v0.7.0-nightly')","('2022-03-29-numbers.json',5.343000,'v0.7.1-nightly')"]}]}
