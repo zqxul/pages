@@ -60,8 +60,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: temp
-          destination_dir: public/json
-          keep_files: true
+          destination_dir: /front/public/json
+          keep_files: false
 
 
       # - name: Setup Go Env
