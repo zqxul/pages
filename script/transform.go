@@ -102,7 +102,19 @@ func main() {
 		results := PrepareResults(v)
 		WriteResults(results, k)
 	}
+	WriteTypeIndexFile()
+}
 
+func WriteTypeIndexFile() {
+	indexJson, err := json.Marshal(types)
+	if err != nil {
+		fmt.Printf("write index file err: %v\n", err)
+	}
+	err = ioutil.WriteFile(destDir+"/"+"type"+JsonSuffix, indexJson, 0644)
+	if err != nil {
+		fmt.Printf("write file err: %v\n", err)
+		return
+	}
 }
 
 func PrepareDestDir() bool {
@@ -122,6 +134,7 @@ func PrepareDestDir() bool {
 }
 
 var typeMap = make(map[string]*sync.Map)
+var types = make([]string, 0)
 
 func HandleSourceDir() {
 	fmt.Printf("Start reading source dir: %s\n", srcDir)
@@ -135,6 +148,7 @@ func HandleSourceDir() {
 			continue
 		}
 		typeMap[v.Name()] = &sync.Map{}
+		types = append(types, v.Name())
 	}
 	for k, _ := range typeMap {
 		HandleTypeDir(k)
