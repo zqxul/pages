@@ -56,8 +56,8 @@ type Result struct {
 	X        []string `json:"x"`
 }
 type Line struct {
-	Name string `json:"name"`
-	Data []float32
+	Name string    `json:"name"`
+	Data []float32 `json:"data"`
 }
 
 var (
