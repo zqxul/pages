@@ -271,8 +271,8 @@ func WriteResults(results []*Result, t string) {
 		indexMap[result.Index] = result.Title + JsonSuffix
 		go WriteResult(result, &wg)
 	}
-	WriteIndexFile(indexMap, t)
 	wg.Wait()
+	WriteIndexFile(indexMap, t)
 }
 
 func WriteResult(r *Result, wg *sync.WaitGroup) {
