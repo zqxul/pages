@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"sort"
+	"strings"
 	"sync"
 )
 
@@ -45,20 +46,27 @@ func (d *Data) GetSchema(name string) *Schema {
 
 // output
 type Result struct {
-	Title string  `json:"title"`
-	Sql   string  `json:"sql"`
-	Lines []*Line `json:"lines"`
-	Type  string  `json:"-"`
-	Index int     `json:"-"`
+	Title    string   `json:"title"`
+	Sql      string   `json:"sql"`
+	Lines    []*Line  `json:"lines"`
+	Type     string   `json:"-"`
+	Index    int      `json:"-"`
+	Versions []string `json:"version"`
+	Legends  []string `json:"legend"`
+	X        []string `json:"x"`
 }
 type Line struct {
-	Line    string `json:"line"`
-	Samples []string
+	Name string `json:"name"`
+	Data []string
 }
 
 var (
-	sampleTemplate  = `('%s',%f,'%s')`
+	sampleTemplate  = `('%s',%.3f,'%s')`
 	srcDir, destDir string
+)
+
+const (
+	JsonSuffix = `.json`
 )
 
 func (r *Result) Bytes() []byte {
@@ -80,7 +88,7 @@ func (r *Result) String() string {
 }
 
 func init() {
-	srcDir = *flag.String("src", "collectors", "source directory")
+	srcDir = *flag.String("src", "collector", "source directory")
 	destDir = *flag.String("desc", "temp", "generated directory")
 	flag.Parse()
 }
@@ -98,7 +106,7 @@ func main() {
 }
 
 func PrepareDestDir() bool {
-	fmt.Println("Prepare destination dir")
+	fmt.Printf("Prepare destination dir: %s\n", destDir)
 	var err error
 	if _, err = os.Stat(destDir); os.IsNotExist(err) {
 		fmt.Println("Destination dir not exist, start making dir")
@@ -107,7 +115,7 @@ func PrepareDestDir() bool {
 			fmt.Printf("Prepare destination err: %v\n", err)
 			return false
 		}
-		fmt.Printf("Detination dir Ready")
+		fmt.Println("Detination dir Ready")
 		return true
 	}
 	return true
@@ -116,7 +124,7 @@ func PrepareDestDir() bool {
 var typeMap = make(map[string]*sync.Map)
 
 func HandleSourceDir() {
-	fmt.Println("Start reading source dir")
+	fmt.Printf("Start reading source dir: %s\n", srcDir)
 	fs, err := ioutil.ReadDir(srcDir)
 	if err != nil {
 		fmt.Printf("Failed to read source dir, err: %s\n", err)
@@ -134,8 +142,8 @@ func HandleSourceDir() {
 }
 
 func HandleTypeDir(typeDir string) {
-	fmt.Printf("Start reading type dir: %s\n", typeDir)
 	typePath := srcDir + "/" + typeDir
+	fmt.Printf("Start reading type dir: %s\n", typePath)
 	dirs, err := os.ReadDir(typePath)
 	if err != nil {
 		fmt.Printf("Failed to read type dir, err: %v\n", err)
@@ -146,7 +154,7 @@ func HandleTypeDir(typeDir string) {
 	}
 	for _, item := range dirs {
 		var err error
-		if item.IsDir() {
+		if item.IsDir() || !strings.HasSuffix(item.Name(), JsonSuffix) {
 			continue
 		}
 		filename := item.Name()
@@ -178,7 +186,7 @@ func PrepareTypeDir(typeDir string) bool {
 			fmt.Printf("Prepare type dir err: %v\n", err)
 			return false
 		}
-		fmt.Printf("Type dir Ready")
+		fmt.Println("Type dir Ready")
 		return true
 	}
 	return true
@@ -191,6 +199,8 @@ func HandleData(data *Data, filename string, t string) {
 		r.Sql = schema.Sql
 		r.Type = t
 		SetLine(r, &schema, &data.Meta, filename)
+		r.X = append(r.X, GetDateFromFilename(filename))
+		r.Versions = append(r.Versions, data.Meta.Tag)
 	}
 }
 
@@ -199,9 +209,10 @@ func GetResult(resultMap *sync.Map, k string, index int) *Result {
 	var ok bool
 	if v, ok = resultMap.Load(k); !ok {
 		v = &Result{
-			Title: k,
-			Lines: []*Line{{Line: "min"}, {Line: "max"}},
-			Index: index,
+			Title:   k,
+			Lines:   []*Line{{Name: "min"}, {Name: "max"}},
+			Index:   index,
+			Legends: []string{"min", "max"},
 		}
 		resultMap.Store(k, v)
 	}
@@ -210,17 +221,24 @@ func GetResult(resultMap *sync.Map, k string, index int) *Result {
 
 func SetLine(r *Result, schema *Schema, meta *Meta, filename string) {
 	for _, l := range r.Lines {
-		if l.Line == "min" {
-			l.Samples = append(l.Samples, fmt.Sprintf(sampleTemplate, filename, schema.Min, meta.Tag))
-		} else if l.Line == "max" {
-			l.Samples = append(l.Samples, fmt.Sprintf(sampleTemplate, filename, schema.Max, meta.Tag))
+		if l.Name == "min" {
+			l.Data = append(l.Data, fmt.Sprintf("%.3f", schema.Min))
+		} else if l.Name == "max" {
+			l.Data = append(l.Data, fmt.Sprintf("%.3f", schema.Max))
 		}
 	}
 }
 
+func GetDateFromFilename(filename string) string {
+	if len(filename) > 10 {
+		return filename[0:10]
+	}
+	return ""
+}
+
 func PrepareResults(resultMap *sync.Map) []*Result {
 	results := make([]*Result, 0)
-	resultMap.Range(func(key, value any) bool {
+	resultMap.Range(func(key, value interface{}) bool {
 		if v, ok := resultMap.Load(key); ok {
 			r := v.(*Result)
 			results = append(results, r)
@@ -236,8 +254,7 @@ func WriteResults(results []*Result, t string) {
 	var wg sync.WaitGroup
 	wg.Add(len(results))
 	for _, result := range results {
-		fmt.Println(result)
-		indexMap[result.Index] = result.Title + ".json"
+		indexMap[result.Index] = result.Title + JsonSuffix
 		go WriteResult(result, &wg)
 	}
 	WriteIndexFile(indexMap, t)
@@ -248,7 +265,7 @@ func WriteResult(r *Result, wg *sync.WaitGroup) {
 	defer func() {
 		wg.Done()
 	}()
-	filepath := destDir + "/" + r.Type + "/" + r.Title + ".json"
+	filepath := destDir + "/" + r.Type + "/" + r.Title + JsonSuffix
 	err := ioutil.WriteFile(filepath, r.Bytes(), 0666)
 	if err != nil {
 		fmt.Printf("write file %s err: %v\n", filepath, err)
@@ -270,7 +287,7 @@ func WriteIndexFile(indexeMap map[int]string, t string) {
 	if err != nil {
 		fmt.Printf("write index file err: %v\n", err)
 	}
-	err = ioutil.WriteFile(destDir+"/"+t+"/"+t+".json", indexJson, 0644)
+	err = ioutil.WriteFile(destDir+"/"+t+"/"+t+JsonSuffix, indexJson, 0644)
 	if err != nil {
 		fmt.Printf("write file err: %v\n", err)
 		return
