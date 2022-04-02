@@ -1,1 +1,1 @@
-{"title":"Q6","sql":"SELECT sum(number+number+number) FROM numbers_mt(10000000000);","lines":[{"name":"min","Data":[5.145,5.17]},{"name":"max","Data":[5.345,5.343]}],"version":["v0.7.0-nightly","v0.7.1-nightly"],"legend":["min","max"],"x":["2022-03-28","2022-03-29"]}
+{"title":"Q6","sql":"SELECT sum(number+number+number) FROM numbers_mt(10000000000);","lines":[{"name":"min","data":[5.145,5.17]},{"name":"max","data":[5.345,5.343]}],"version":["v0.7.0-nightly","v0.7.1-nightly"],"legend":["min","max"],"x":["2022-03-28","2022-03-29"]}

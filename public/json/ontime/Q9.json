@@ -1,1 +1,1 @@
-{"title":"Q9","sql":"SELECT Year, count(*) as c1 FROM ontime GROUP BY Year;","lines":[{"name":"min","Data":[0.275,0.261]},{"name":"max","Data":[0.436,0.62]}],"version":["v0.7.0-nightly","v0.7.1-nightly"],"legend":["min","max"],"x":["2022-03-28","2022-03-29"]}
+{"title":"Q9","sql":"SELECT Year, count(*) as c1 FROM ontime GROUP BY Year;","lines":[{"name":"min","data":[0.275,0.261]},{"name":"max","data":[0.436,0.62]}],"version":["v0.7.0-nightly","v0.7.1-nightly"],"legend":["min","max"],"x":["2022-03-28","2022-03-29"]}
