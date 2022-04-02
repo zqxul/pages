@@ -25,58 +25,24 @@ jobs:
     
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - name: Setup Go Env
+        uses: actions/setup-go@v3
         with:
           go-version: '>=1.17.0'
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          
-      - name: create public
-        run:
-          mkdir public
-     
-      - name: show go version
+      - name: Print Go Version
         run: go version
-
-      # - name: run go programe
-      #   run: go run main.go
-
-      - name: build file
-        run: touch public/g.json
-
-      - name: build file
-        run: echo "h.json" >> public/h.json
-      
-      - name: deploy
+      - name: Do Transform
+        run: go run script/transform.go
+      - name: Upload Result
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # publish_branch: main
+          publish_branch: gh-pages
           publish_dir: temp
           destination_dir: front/public/json
           keep_files: false
+          commit_message: 'Update Transform Data'
 
-
-      # - name: Setup Go Env
-      #   uses: actions/setup-go@v3
-      #   with:
-      #     go-version: '>=1.17.0'
-      # - name: Print Go Version
-      #   run: go version
-      # - name: Do Transform
-      #   run: go run script/transform.go
-      # - name: Upload Result
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: collector/numbers
-      #     destination_dir: front/public/json
-      #     keep_files: false
+      
+     
+      
