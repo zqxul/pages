@@ -57,7 +57,7 @@ type Result struct {
 }
 type Line struct {
 	Name string `json:"name"`
-	Data []string
+	Data []float32
 }
 
 var (
@@ -222,9 +222,9 @@ func GetResult(resultMap *sync.Map, k string, index int) *Result {
 func SetLine(r *Result, schema *Schema, meta *Meta, filename string) {
 	for _, l := range r.Lines {
 		if l.Name == "min" {
-			l.Data = append(l.Data, fmt.Sprintf("%.3f", schema.Min))
+			l.Data = append(l.Data, schema.Min)
 		} else if l.Name == "max" {
-			l.Data = append(l.Data, fmt.Sprintf("%.3f", schema.Max))
+			l.Data = append(l.Data, schema.Max)
 		}
 	}
 }
