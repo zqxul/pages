@@ -48,8 +48,8 @@ type Result struct {
 	Title string  `json:"title"`
 	Sql   string  `json:"sql"`
 	Lines []*Line `json:"lines"`
-	Type  string  `json:"_"`
-	Index int     `json:"_"`
+	Type  string  `json:"-"`
+	Index int     `json:"-"`
 }
 type Line struct {
 	Line    string `json:"line"`
