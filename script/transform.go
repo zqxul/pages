@@ -234,7 +234,7 @@ func WriteLastestResults(data *Data, typeDir, filename string) {
 		fmt.Printf("marshal lastest result err: %v", err)
 		return
 	}
-	filepath := destDir + "/" + typeDir + "/" + "lastest" + JsonSuffix
+	filepath := destDir + "/" + typeDir + "/" + "latest" + JsonSuffix
 	err = ioutil.WriteFile(filepath, result, 0666)
 	if err != nil {
 		fmt.Printf("write file %s err: %v\n", filepath, err)
