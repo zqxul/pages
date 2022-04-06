@@ -224,7 +224,7 @@ func GetResult(resultMap *sync.Map, k string, index int) *Result {
 	if v, ok = resultMap.Load(k); !ok {
 		v = &Result{
 			Title:   k,
-			Lines:   []*Line{{Name: "min"}, {Name: "max"}},
+			Lines:   []*Line{{Name: "min"}, {Name: "max"}, {Name: "median"}, {Name: "mean"}},
 			Index:   index,
 			Legends: []string{"min", "max", "median", "mean"},
 		}
