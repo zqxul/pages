@@ -32,9 +32,10 @@ jobs:
       - name: Print Go Version
         run: go version
       - name: Do Transform
-        run: go run script/transform.go
+        run: go build script/transform.go
       - name: Upload Result
         run: 
+          mkdir -p front/public/json
           mv temp/* front/public/json
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
