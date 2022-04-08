@@ -33,9 +33,11 @@ jobs:
         run: go version
       - name: Do Transform
         run: go run script/transform.go
-      - name: Upload Result
+      - name: Prepare Dir
         run: 
           mkdir -p front/public/json
+      - name: Move Result
+        run: 
           mv temp/* front/public/json
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
