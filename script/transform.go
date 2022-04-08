@@ -23,11 +23,11 @@ type Schema struct {
 	Min      float32   `json:"min"`
 	Max      float32   `json:"max"`
 	Median   float32   `json:"median"`
-	StdDev   float32   `json:"std_dev"`
+	StdDev   float64   `json:"std_dev"`
 	ReadRow  uint64    `json:"read_row"`
 	ReadByte uint64    `json:"read_byte"`
 	Times    []float32 `json:"time"`
-	Errors   []error   `json:"error"`
+	Errors   []string  `json:"error"`
 	Mean     float64   `json:"mean"`
 }
 type Data struct {
@@ -61,12 +61,12 @@ type Line struct {
 }
 
 var (
-	sampleTemplate  = `('%s',%.3f,'%s')`
 	srcDir, destDir string
 )
 
 const (
-	JsonSuffix = `.json`
+	JsonSuffix    = `.json`
+	IndexFilename = `index`
 )
 
 func (r *Result) Bytes() []byte {
@@ -106,11 +106,11 @@ func main() {
 }
 
 func WriteTypeIndexFile() {
-	indexJson, err := json.Marshal(types)
+	indexJson, err := json.Marshal(perf)
 	if err != nil {
 		fmt.Printf("write index file err: %v\n", err)
 	}
-	err = ioutil.WriteFile(destDir+"/"+"type"+JsonSuffix, indexJson, 0644)
+	err = ioutil.WriteFile(destDir+"/"+IndexFilename+JsonSuffix, indexJson, 0644)
 	if err != nil {
 		fmt.Printf("write file err: %v\n", err)
 		return
@@ -133,8 +133,17 @@ func PrepareDestDir() bool {
 	return true
 }
 
+type DatabendPerf struct {
+	Env   string   `json:"env"`
+	Types []string `json:"types"`
+}
+
+const env = "Amazon EC2 c5n.9xlarge"
+
+var perf = DatabendPerf{
+	Env: env,
+}
 var typeMap = make(map[string]*sync.Map)
-var types = make([]string, 0)
 
 func HandleSourceDir() {
 	fmt.Printf("Start reading source dir: %s\n", srcDir)
@@ -148,9 +157,9 @@ func HandleSourceDir() {
 			continue
 		}
 		typeMap[v.Name()] = &sync.Map{}
-		types = append(types, v.Name())
+		perf.Types = append(perf.Types, v.Name())
 	}
-	for k, _ := range typeMap {
+	for k := range typeMap {
 		HandleTypeDir(k)
 	}
 }
@@ -166,7 +175,7 @@ func HandleTypeDir(typeDir string) {
 	if ok := PrepareTypeDir(typeDir); !ok {
 		return
 	}
-	for i, item := range dirs {
+	for _, item := range dirs {
 		var err error
 		if item.IsDir() || !strings.HasSuffix(item.Name(), JsonSuffix) {
 			continue
@@ -186,7 +195,6 @@ func HandleTypeDir(typeDir string) {
 			continue
 		}
 		HandleData(&data, filename, typeDir)
-		fmt.Printf("current i: %d, last index: %d, filename: %s\n", i, len(dirs)-1, filename)
 		latestFilename = filename
 		latestData = data
 	}
@@ -261,6 +269,9 @@ func PrepareTypeDir(typeDir string) bool {
 
 func HandleData(data *Data, filename string, t string) {
 	for i, schema := range data.Schemas {
+		if len(schema.Errors) > 0 {
+			return
+		}
 		resultMap := typeMap[t]
 		r := GetResult(resultMap, schema.Name, i)
 		r.Sql = schema.Sql
