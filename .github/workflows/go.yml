@@ -27,8 +27,7 @@ jobs:
 
     - name: Make summary log
       if: ${{ failure() }}
-      run: |
-        tail -10 detail.log > summary.log
+      run: tail -10 detail.log > summary.log
 
     - name: Read lastest log
       if: ${{ failure() }}
@@ -49,6 +48,6 @@ jobs:
         to: xuzhiqing2014@outlook.com, xuzhiqing2014@163.com
         from: databend-perf
         secure: true
-        body: "Build job of ${{github.repository}} perf-tool run failed, lastest output: \n${{ steps.package.outputs.content }}. \n For detail log, see attachment file."
+        body: "Build job of ${{github.repository}} perf-tool run failed, lastest output: \n${{ steps.package.outputs.content }}\n For detail log, see attachment file."
         attachments: detail.log
 
