@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
-	panic("panic main")
+	fmt.Println("aaabbbccc")
 }
