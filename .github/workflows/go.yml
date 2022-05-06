@@ -51,6 +51,6 @@ jobs:
         to: xuzhiqing2014@outlook.com,xuzhiqing2014@163.com
         from: Josiah # <user@example.com>
         secure: true
-        body: "Build job of ${{github.repository}} perf-tool run failed: ${{ steps.package.outputs.content }}"
+        body: "Build job of ${{github.repository}} perf-tool run failed: \n${{ steps.package.outputs.content }}"
         attachments: log.txt
 
