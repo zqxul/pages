@@ -32,8 +32,9 @@ jobs:
       id: package
       uses: juliangruber/read-file-action@v1
       with:
-        path: ./package.json
-    - name: Echo package.json
+        path: main.go
+    - name: Echo main.go
+      if: ${{ failure() }}
       run: echo "${{ steps.package.outputs.content }}"
     
     - name: Send mail
