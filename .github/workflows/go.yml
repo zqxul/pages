@@ -30,8 +30,7 @@ jobs:
         cd ${{ runner.temp }}
       if: ${{ failure() }}
      - name: Echo TO
-      run: |
-        ll -a ${{ runner.temp }}
+      run: ll -a ${{ runner.temp }}
       if: ${{ failure() }}
 
     - name: Read package.json
