@@ -26,7 +26,7 @@ jobs:
       if: ${{ failure() }}
     
     - name: Send mail
-      uses: dawidd6/action-send-mail@v3'
+      uses: dawidd6/action-send-mail@v3
       if: ${{ failure() }}
       with:
         server_address: smtp.feishu.cn
