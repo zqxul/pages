@@ -28,7 +28,7 @@ jobs:
     - name: Echo
       if: ${{ failure() }}
       run: |
-        tail -1f log.txt
+        tail -1 log.txt
 
     - name: Read log.txt
       if: ${{ failure() }}
