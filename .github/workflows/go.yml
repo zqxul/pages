@@ -26,7 +26,6 @@ jobs:
     - name: Echo
       run: |
         ls log
-        echo aaaaaaa
       if: ${{ failure() }}
 
     - name: Read package.json
