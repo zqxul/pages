@@ -19,14 +19,16 @@ jobs:
         go-version: 1.18
 
     - name: Run
+      run: go build main.go
+
+    - name: Run
       run: |
-        mkdir log
-        go run main.go --log-path log
+       ./main --log-path ${{ runner.temp }}/build_logs
 
     - name: Echo
       run: |
-        cd log
-        ls
+        cd ${{ runner.temp }}/build_logs
+        ll
       if: ${{ failure() }}
 
     - name: Read package.json
