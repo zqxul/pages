@@ -35,7 +35,7 @@ jobs:
       id: package
       uses: juliangruber/read-file-action@v1
       with:
-        path: summary.txt
+        path: summary.log
     
     - name: Send mail
       uses: dawidd6/action-send-mail@v3
