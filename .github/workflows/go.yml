@@ -34,7 +34,7 @@ jobs:
       id: package
       uses: juliangruber/read-file-action@v1
       with:
-        path: log.txt
+        path: short-log.txt
     - name: Echo main.go
       if: ${{ failure() }}
       run: echo "${{ steps.package.outputs.content }}"
@@ -52,5 +52,5 @@ jobs:
         from: Josiah # <user@example.com>
         secure: true
         body: Build job of ${{github.repository}} ${{ steps.package.outputs.content }}
-        attachments: short-log.txt
+        attachments: log.txt
 
