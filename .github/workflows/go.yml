@@ -19,11 +19,7 @@ jobs:
 
     - name: Run
       run: |
-        go build main.go
-
-    - name: Run
-      run: |
-        ./main > detail.log
+        go run main.go > detail.log
 
     - name: Make summary log
       if: ${{ failure() }}
