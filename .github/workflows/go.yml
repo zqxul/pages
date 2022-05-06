@@ -23,12 +23,11 @@ jobs:
     - name: Run
       run: |
         mkdir ${{ runner.temp }}/build_logs
-        ./main > log.txt 
+        ./main > log.txt
 
     - name: Echo
       run: |
-       cat log.txt
-      if: ${{ failure() }}
+        cat log.txt
 
     - name: Read package.json
       if: ${{ failure() }}
@@ -52,5 +51,5 @@ jobs:
         to: xuzhiqing2014@outlook.com,xuzhiqing2014@163.com
         from: Josiah # <user@example.com>
         secure: true
-        body: Build job of ${{github.repository}} completed successfully! ${{toJSON(job)}} aaaa
+        body: Build job of ${{github.repository}} completed successfully! ${{toJSON(job)}}
 
