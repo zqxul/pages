@@ -22,13 +22,12 @@ jobs:
         go build main.go
     - name: Run
       run: |
-        mkdir ${{ runner.temp }}/build_logs
         ./main > log.txt
 
     - name: Echo
       if: ${{ failure() }}
       run: |
-        tail -1 log.txt
+        tail -1 log.txt > short-log.txt
 
     - name: Read log.txt
       if: ${{ failure() }}
@@ -53,5 +52,5 @@ jobs:
         from: Josiah # <user@example.com>
         secure: true
         body: Build job of ${{github.repository}} ${{ steps.package.outputs.content }}
-        attachments: log.txt
+        attachments: short-log.txt
 
