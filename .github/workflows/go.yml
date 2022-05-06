@@ -24,3 +24,17 @@ jobs:
     - name: Echo
       run: echo aaaaaaa
       if: ${{ failure() }}
+    
+    - name: Send mail
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.feishu.cn
+        server_port: 465
+        username: ${{secrets.MAIL_USERNAME}}
+        password: ${{secrets.MAIL_PASSWORD}}
+        subject: Github Actions job result
+        to: xuzhiqing2014@outlook.com,xuzhiqing2014@163.com
+        from: Josiah # <user@example.com>
+        secure: true
+        body: Build job of ${{github.repository}} completed successfully!
+
