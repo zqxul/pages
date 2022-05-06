@@ -28,7 +28,7 @@ jobs:
     - name: Make summary log
       if: ${{ failure() }}
       run: |
-        tail -1 detail.log > summary.log
+        tail -10 detail.log > summary.log
 
     - name: Read lastest log
       if: ${{ failure() }}
