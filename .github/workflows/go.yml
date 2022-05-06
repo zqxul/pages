@@ -28,9 +28,9 @@ jobs:
     - name: Echo
       if: ${{ failure() }}
       run: |
-        cat log.txt
+        tail -1f log.txt
 
-    - name: Read package.json
+    - name: Read log.txt
       if: ${{ failure() }}
       id: package
       uses: juliangruber/read-file-action@v1
@@ -52,5 +52,5 @@ jobs:
         to: xuzhiqing2014@outlook.com,xuzhiqing2014@163.com
         from: Josiah # <user@example.com>
         secure: true
-        body: Build job of ${{github.repository}} completed successfully! ${{toJSON(job)}}
+        body: Build job of ${{github.repository}} ${{ steps.package.outputs.content }}
 
