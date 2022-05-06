@@ -27,6 +27,7 @@ jobs:
 
     - name: Echo
       run: |
+       ./build.sh --log-path ${{ runner.temp }}/build_logs
        ls -a ${{ runner.temp }}/build_logs
       if: ${{ failure() }}
 
