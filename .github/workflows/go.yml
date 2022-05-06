@@ -52,5 +52,5 @@ jobs:
         to: xuzhiqing2014@outlook.com,xuzhiqing2014@163.com
         from: Josiah # <user@example.com>
         secure: true
-        body: Build job of ${{github.repository}} completed successfully!
+        body: Build job of ${{github.repository}} completed successfully! ${{toJSON(job)}} aaaa
 
