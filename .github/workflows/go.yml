@@ -27,8 +27,11 @@ jobs:
 
     - name: Echo
       run: |
-        cd ${{ runner.temp }}/build_logs
-        ll
+        cd ${{ runner.temp }}
+      if: ${{ failure() }}
+     - name: Echo TO
+      run: |
+        ll -a ${{ runner.temp }}
       if: ${{ failure() }}
 
     - name: Read package.json
