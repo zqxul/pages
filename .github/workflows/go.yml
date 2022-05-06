@@ -19,11 +19,22 @@ jobs:
         go-version: 1.18
 
     - name: Run
-      run: go run main.go
+      run: |
+        mkdir ${{ runner.temp }}/build_logs
+        go run main.go --log-path ${{ runner.temp }}/build_logs
 
     - name: Echo
       run: echo aaaaaaa
       if: ${{ failure() }}
+
+    - name: Read package.json
+      if: ${{ failure() }}
+      id: package
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./package.json
+    - name: Echo package.json
+      run: echo "${{ steps.package.outputs.content }}"
     
     - name: Send mail
       uses: dawidd6/action-send-mail@v3
