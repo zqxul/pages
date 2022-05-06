@@ -45,7 +45,7 @@ jobs:
         server_port: 465
         username: ${{secrets.MAIL_USERNAME}}
         password: ${{secrets.MAIL_PASSWORD}}
-        subject: Github Actions job result
+        subject: Databend Pert Actions job result
         to: xuzhiqing2014@outlook.com, xuzhiqing2014@163.com
         from: databend-perf
         secure: true
