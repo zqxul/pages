@@ -20,11 +20,13 @@ jobs:
 
     - name: Run
       run: |
-        mkdir ${{ runner.temp }}/build_logs
-        go run main.go --log-path ${{ runner.temp }}/build_logs
+        mkdir log
+        go run main.go --log-path log
 
     - name: Echo
-      run: echo aaaaaaa
+      run: |
+        ls log
+        echo aaaaaaa
       if: ${{ failure() }}
 
     - name: Read package.json
