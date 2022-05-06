@@ -20,24 +20,22 @@ jobs:
     - name: Run
       run: |
         go build main.go
+
     - name: Run
       run: |
-        ./main > log.txt
+        ./main > detail.log
 
-    - name: Echo
+    - name: Make summary log
       if: ${{ failure() }}
       run: |
-        tail -1 log.txt > short-log.txt
+        tail -1 detail.txt > summary.log
 
-    - name: Read log.txt
+    - name: Read lastest log
       if: ${{ failure() }}
       id: package
       uses: juliangruber/read-file-action@v1
       with:
-        path: short-log.txt
-    - name: Echo main.go
-      if: ${{ failure() }}
-      run: echo "${{ steps.package.outputs.content }}"
+        path: summary.txt
     
     - name: Send mail
       uses: dawidd6/action-send-mail@v3
@@ -48,9 +46,9 @@ jobs:
         username: ${{secrets.MAIL_USERNAME}}
         password: ${{secrets.MAIL_PASSWORD}}
         subject: Github Actions job result
-        to: xuzhiqing2014@outlook.com,xuzhiqing2014@163.com
-        from: Josiah # <user@example.com>
+        to: xuzhiqing2014@outlook.com, xuzhiqing2014@163.com
+        from: databend-perf
         secure: true
-        body: "Build job of ${{github.repository}} perf-tool run failed: \n${{ steps.package.outputs.content }}"
-        attachments: log.txt
+        body: "Build job of ${{github.repository}} perf-tool run failed, lastest output: \n${{ steps.package.outputs.content }}. \n For detail log, see attachment file."
+        attachments: detail.log
 
