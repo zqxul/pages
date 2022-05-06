@@ -19,12 +19,15 @@ jobs:
 
     - name: Run
       run: |
-        mkdir log
-        go run main.go --log-path ${{ runner.temp }}/build_logs
+        go build main.go
+    - name: Run
+      run: |
+        mkdir ${{ runner.temp }}/build_logs
+        ./main --log-path ${{ runner.temp }}/build_logs
 
     - name: Echo
       run: |
-        cd log
+        cd ${{ runner.temp }}
         ls
       if: ${{ failure() }}
 
